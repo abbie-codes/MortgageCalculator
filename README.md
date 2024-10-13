@@ -10,4 +10,4 @@ A mortgage calculator that takes the home price, deposit, interest rate and year
 
 
 Inspiration, code snippets, etc.
-* [awesome-readme](https://www.mortgagecalculator.uk/widget/#fcjavascrip)
+* [mortgage-calculator](https://www.mortgagecalculator.uk/widget/#fcjavascrip)
