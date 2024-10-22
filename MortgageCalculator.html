@@ -37,7 +37,168 @@
             cursor: pointer;
         }
     </style>
+</head>
+
+<body>
+    <div style="width:200px; text-align:center; background-color:#FFF">
+        <p style="text-align:center;"><a href="https://www.mortgagecalculator.uk/" target="_blank">
+                <img src="https://themortgagecowitney.co.uk/wp-content/uploads/2020/07/logo.png" border="0"
+                    alt="The Mortgage Company Witney" /></a>
+            <br />
+        <div align="center">
+            <form name="calc" id="calc" method="post" action="#">
+
+                <table border='0' cellpadding='1' cellspacing='0' class="unstyledtable">
+                    <tbody>
+
+                        <input name="homevalue" type="hidden" value="99999999" />
+                        <input name="annualTax" type="hidden" value="0" />
+                        <input name="annualInsurance" type="hidden" value="0" />
+                        <input name="monthlyPMI" type="hidden" value="0" />
+                        <input name="closingcosts" type="hidden" value="0" />
+                        <input type="hidden" class="results" name="otherPmts" size="8" readonly />
+                        <input type="hidden" class="results" name="monthlyPmt" size="8" readonly />
+                        <input type="hidden" class="results" name="downpayment" size="8" readonly />
+
+                        <tr>
+                            <td nowrap>Home price:</td>
+                            <td align="center">
+                                <input id="homeval" name="homeval" type="number" step="any"
+                                    onKeyUp="clear_results(this.form);calcLoanAmount(this.form);computeForm(this.form)"
+                                    style="width: 6em" onfocus="if(this.value==this.defaultValue)this.value=''"
+                                    onblur="if(this.value=='')this.value=this.defaultValue" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td nowrap>Deposit:</td>
+                            <td align="center"><input id="down" name="down" type="number" step="any"
+                                    onKeyUp="clear_results(this.form);calcLoanAmount(this.form);computeForm(this.form)"
+                                    style="width: 6em" onfocus="if(this.value==this.defaultValue)this.value=''"
+                                    onblur="if(this.value=='')this.value=this.defaultValue" /></td>
+                        </tr>
+
+                        <tr>
+                            <td nowrap>Loan amount:</td>
+                            <td align="center"><input id="principal" name="principal" id="principal" type="number" step="any"
+                                    style="width: 6em" onKeyUp="clear_results(this.form);computeForm(this.form)" /></td>
+                        </tr>
+
+                        <tr>
+                            <td nowrap>Rate:</td>
+                            <td align="center"><input id="intRate" name="intRate" type="number" style="width: 6em" step="any"
+                                    onKeyUp="clear_results(this.form);computeForm(this.form)" size="8"
+                                    /></td>
+                        </tr>
+
+                        <tr>
+                            <td nowrap> Years:</td>
+                            <td align="center"><input id="numYears" name="numYears" style="width: 6em" type="number" step="any"
+                                    onKeyUp="clear_results(this.form);computeForm(this.form)" size="8" /></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" align="center"><input type="button" name="compute" class="but"
+                                    value="Calculate" onClick="computeForm(this.form)" /></td>
+                        </tr>
+                        <tr>
+                            <td nowrap>Payment:</td>
+                            <td align="center"><input type="text" name="monthlyPI" style="width: 6em" readonly /></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <br />
+        </p>
+    </div>
     <script>
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let price = params.price || 300000;
+        let deposit = params.deposit || 30000;
+        let rate = params.rate || 4.5;
+        let years = params.years || 25;
+        let amount = price - deposit;
+
+        let homeval = document.getElementById('homeval');
+        let Vdeposit = document.getElementById('down');
+        let Vprincipal = document.getElementById('principal');
+        let intRate = document.getElementById('intRate');
+        let numYears = document.getElementById('numYears');
+
+        homeval.value = price;
+        Vdeposit.value = deposit;
+        Vprincipal.value = amount;
+        intRate.value = rate;
+        numYears.value = years;
+
+
+        homeval.onfocus = function () {
+            if (this.value == price) {
+                this.value = '';
+            }
+        };
+
+        homeval.onblur = function () {
+            if (this.value == '') {
+                this.value = price;
+            }
+        };
+
+        Vdeposit.onfocus = function () {
+            if (this.value == deposit) {
+                this.value = '';
+            }
+        };
+
+        Vdeposit.onblur = function () {
+            if (this.value == '') {
+                this.value = deposit;
+            }
+        };
+
+        Vprincipal.onfocus = function () {
+            if (this.value == amount) {
+                this.value = '';
+            }
+        };
+
+        Vprincipal.onblur = function () {
+            if (this.value == '') {
+                this.value = amount;
+            }
+        };
+
+        intRate.onfocus = function () {
+            if (this.value == rate) {
+                this.value = '';
+            }
+        };
+
+        intRate.onblur = function () {
+            if (this.value == '') {
+                this.value = rate;
+            }
+        };
+
+        numYears.onfocus = function () {
+            if (this.value == years) {
+                this.value = '';
+            }
+        };
+
+        numYears.onblur = function () {
+            if (this.value == '') {
+                this.value = years;
+            }
+        };
+
+
         function computeMonthlyPayment(prin, numPmts, intRate) {
 
             var pmtAmt = 0;
@@ -58,9 +219,6 @@
             return pmtAmt;
 
         }
-
-
-
 
         function fn(num, places, comma) {
 
@@ -133,9 +291,6 @@
             return finNum;
         }
 
-
-
-
         function sn(num) {
 
             num = num.toString();
@@ -171,7 +326,6 @@
             return rnum;
 
         }
-
 
         function calcLoanAmount(form) {
             var Vhomevalue = document.calc.homeval.value;
@@ -216,7 +370,7 @@
                 VmonthlyInsurance /= 100;
             }
 
-            var Vhomevalue = document.calc.homevalue.value;
+            var Vhomevalue = document.calc.homeval.value;
             var VmonthlyPMI = document.calc.monthlyPMI.value;
 
             if (VmonthlyPMI == 0 || VmonthlyPMI == "" || Vhomevalue > 1.249999999 * Vprincipal) {
@@ -245,12 +399,9 @@
 
         }
 
-
         function monthlyAmortSched(form) {
 
             {
-
-
                 var Vprincipal = sn(parseFloat(document.calc.principal.value) + parseFloat(document.calc.closingcosts.value));
                 var VintRate = sn(document.calc.intRate.value);
                 var VnumYears = sn(document.calc.numYears.value);
@@ -410,12 +561,9 @@
 
                 }
 
-
-
                 var part1 = "<head><title>Amortization Schedule</title></head>";
                 part1 += "<body bgcolor= '#FFFFFF'><br /><br /><center><font face='arial'>";
                 part1 += "<big><strong>Amortization Schedule</strong></big></center>";
-
 
                 var part2 = "<center><table border=1 cellpadding=2 cellspacing=0>";
                 part2 += "<tr><td colspan=6><font face='arial'><small><strong>Loan ";
@@ -450,7 +598,6 @@
 
         }
 
-
         function clear_results(form) {
 
             document.calc.monthlyPI.value = "";
@@ -459,89 +606,6 @@
 
         }
     </script>
-</head>
-
-<body>
-    <div style="width:200px; text-align:center; background-color:#FFF">
-        <p style="text-align:center;"><a href="https://www.mortgagecalculator.uk/" target="_blank">
-                <img src="https://themortgagecowitney.co.uk/wp-content/uploads/2020/07/logo.png" border="0"
-                    alt="The Mortgage Company Witney" /></a>
-            <br />
-        <div align="center">
-            <form name="calc" id="calc" method="post" action="#">
-
-                <table border='0' cellpadding='1' cellspacing='0' class="unstyledtable">
-                    <tbody>
-
-                        <input name="homevalue" type="hidden" value="99999999" />
-                        <input name="annualTax" type="hidden" value="0" />
-                        <input name="annualInsurance" type="hidden" value="0" />
-                        <input name="monthlyPMI" type="hidden" value="0" />
-                        <input name="closingcosts" type="hidden" value="0" />
-                        <input type="hidden" class="results" name="otherPmts" size="8" readonly />
-                        <input type="hidden" class="results" name="monthlyPmt" size="8" readonly />
-                        <input type="hidden" class="results" name="downpayment" size="8" readonly />
-
-                        <tr>
-                            <td nowrap>Home price:</td>
-                            <td align="center"><input name="homeval" type="number" step="any"
-                                    onKeyUp="clear_results(this.form);calcLoanAmount(this.form);computeForm(this.form)"
-                                    style="width: 6em" onfocus "if(this.value==this.defaultValue)this.value=''"
-                                    onblur="if(this.value=='')this.value=this.defaultValue" value="300000"
-                                    onfocus="this.value = this.value=='300000'?'':this.value;"
-                                    onblur="this.value = this.value==''?'300000':this.value;" /></td>
-                        </tr>
-
-                        <tr>
-                            <td nowrap>Deposit:</td>
-                            <td align="center"><input name="down" type="number" step="any"
-                                    onKeyUp="clear_results(this.form);calcLoanAmount(this.form);computeForm(this.form)"
-                                    style="width: 6em" onfocus="if(this.value==this.defaultValue)this.value=''"
-                                    onblur="if(this.value=='')this.value=this.defaultValue" value="30000"
-                                    onfocus="this.value = this.value=='30000'?'':this.value;"
-                                    onblur="this.value = this.value==''?'30000':this.value;" /></td>
-                        </tr>
-
-                        <tr>
-                            <td nowrap>Loan amount:</td>
-                            <td align="center"><input name="principal" id="principal" type="number" step="any"
-                                    style="width: 6em" onKeyUp="clear_results(this.form);computeForm(this.form)"
-                                    value="270000" onfocus="this.value = this.value=='270000'?'':this.value;"
-                                    onblur="this.value = this.value==''?'270000':this.value;" /></td>
-                        </tr>
-
-                        <tr>
-                            <td nowrap>Rate:</td>
-                            <td align="center"><input name="intRate" type="number" style="width: 6em" step="any"
-                                    onKeyUp="clear_results(this.form);computeForm(this.form)" value="4.3" size="8"
-                                    onfocus="this.value = this.value=='4.3'?'':this.value;"
-                                    onblur="this.value = this.value==''?'4.3':this.value;" /></td>
-                        </tr>
-
-                        <tr>
-                            <td nowrap> Years:</td>
-                            <td align="center"><input name="numYears" style="width: 6em" type="number" step="any"
-                                    onKeyUp="clear_results(this.form);computeForm(this.form)" value="25" size="8"
-                                    onfocus="this.value = this.value=='25'?'':this.value;"
-                                    onblur="this.value = this.value==''?'25':this.value;" /></td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="2" align="center"><input type="button" name="compute" class="but"
-                                    value="Calculate" onClick="computeForm(this.form)" /></td>
-                        </tr>
-                        <tr>
-                            <td nowrap>Payment:</td>
-                            <td align="center"><input type="text" name="monthlyPI" style="width: 6em" readonly /></td>
-                        </tr>
-
-                    </tbody>
-                </table>
-            </form>
-        </div>
-        <br />
-        </p>
-    </div>
 </body>
 
 </html>
